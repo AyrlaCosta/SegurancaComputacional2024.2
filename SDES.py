@@ -26,7 +26,7 @@ def descriptografar_SDES(ciphertext, key) -> str:
 
     estado = permutacao_inicial(ciphertext)
 
-    # dois rounds da rede de Feistel
+    # dois rounds da rede de Feistel na ordem inversa
     for i in range(1, -1, -1):
         estado = feistel(estado, subchaves[i])
 
@@ -47,6 +47,7 @@ def gerar_subchave(key) -> list:
 
     subchave_1 = permutacao_8(L + R)
 
+    # duas rotações adicionais em cada metade
     L = L[1:] + L[0]
     R = R[1:] + R[0]
     L = L[1:] + L[0]
@@ -68,6 +69,7 @@ def permutacao_inicial(plaintext) -> str:
 
 
 def expandir_permutacao(R0) -> str:
+    # tabela de expansão/permutação
     E_P = [4, 1, 2, 3, 2, 3, 4, 1]
     textoPermutado = ""
     for i in E_P:
@@ -100,6 +102,7 @@ def permutacao_4(R0_F) -> str:
 
 
 def permutacao_final(estado) -> str:
+    # tabela de permutação final (IP^-1)
     IP_1 = [4, 1, 3, 5, 7, 2, 8, 6]
     textoPermutado = ""
     for i in IP_1:
@@ -151,10 +154,12 @@ def F(R0, subchave) -> str:
 
 
 def xor(a, b):
+    # Calcula o XOR entre duas strings binárias
     return bin(int(a, 2) ^ int(b, 2))[2:].zfill(len(a))
 
 
 def pad(a, b):
+    # Garante que o valor tenha o comprimento esperado
     while len(a) < b:
         a = '0' + a
     return a
